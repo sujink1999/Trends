@@ -12,4 +12,14 @@ using the contents in the local database. The APIs used are Retrofit, Intuit and
 
 
 ![](https://github.com/sujink1999/Trends/blob/master/Screenshot_20191107-235515.jpg)
+![](https://github.com/sujink1999/Trends/blob/master/Screenshot_20191107-235524.jpg)
+![](https://github.com/sujink1999/Trends/blob/master/Screenshot_20191107-235549.jpg)
+![](https://github.com/sujink1999/Trends/blob/master/Screenshot_20191107-235556.jpg)
+![](https://github.com/sujink1999/Trends/blob/master/Screenshot_20191107-235605.jpg)
+![](https://github.com/sujink1999/Trends/blob/master/Screenshot_20191107-235617.jpg)
+![](https://github.com/sujink1999/Trends/blob/master/Screenshot_20191108-004539.jpg)
+![](https://github.com/sujink1999/Trends/blob/master/Screenshot_20191108-004541.jpg)
+![](https://github.com/sujink1999/Trends/blob/master/Screenshot_20191108-004548.jpg)
+![](https://github.com/sujink1999/Trends/blob/master/Screenshot_20191108-004550.jpg)
+![](https://github.com/sujink1999/Trends/blob/master/Screenshot_20191108-005125.jpg)
 
