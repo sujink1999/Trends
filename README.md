@@ -11,3 +11,5 @@ When a user logs in the bookmarks if any are stored in the local database. The a
 using the contents in the local database. The APIs used are Retrofit, Intuit and Glide.
 
 
+![](https://github.com/sujink1999/Trends/blob/master/Screenshot_20191107-235515.jpg)
+
