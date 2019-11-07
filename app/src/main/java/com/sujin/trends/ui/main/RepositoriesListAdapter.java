@@ -162,7 +162,6 @@ public class RepositoriesListAdapter extends RecyclerView.Adapter<RepositoriesLi
                             @Override
                             public void onFailure(Call<PostResult> call, Throwable t) {
 
-                                Toast.makeText(mContext, t.getMessage(), Toast.LENGTH_LONG).show();
                                 Log.d("error", t.getMessage());
                             }
                         });
@@ -187,7 +186,6 @@ public class RepositoriesListAdapter extends RecyclerView.Adapter<RepositoriesLi
                             @Override
                             public void onFailure(Call<PostResult> call, Throwable t) {
 
-                                Toast.makeText(mContext, t.getMessage(), Toast.LENGTH_LONG).show();
                                 Log.d("error", t.getMessage());
                             }
                         });
