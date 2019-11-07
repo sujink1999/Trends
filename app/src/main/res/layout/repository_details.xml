@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/card_view"
+        android:layout_gravity="center"
+        android:layout_width="@dimen/_290sdp"
+        android:layout_height="@dimen/_150sdp"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:layout_marginBottom="@dimen/_3sdp"
+        card_view:cardElevation="@dimen/_4sdp"
+        card_view:cardCornerRadius="15dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/dp"
+                android:layout_width="@dimen/_33sdp"
+                android:layout_height="@dimen/_33sdp"
+                android:layout_marginTop="@dimen/_7sdp"
+                android:layout_marginLeft="@dimen/_7sdp"
+                />
+
+
+
+            <TextView
+                android:id="@+id/username_repository"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@id/dp"
+                android:layout_marginLeft="@dimen/_45sdp"
+                android:layout_marginTop="@dimen/_12sdp"
+                android:fontFamily="casual"
+                android:text="Sujin / Happy Tripping"
+                android:textSize="@dimen/_10sdp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/star"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/_38sdp"
+                android:layout_marginTop="@dimen/_52sdp"
+                android:fontFamily="casual"
+                android:text="5000" />
+
+            <ImageView
+                android:id="@+id/starpic"
+                android:layout_width="@dimen/_20sdp"
+                android:layout_height="@dimen/_20sdp"
+                android:layout_marginLeft="@dimen/_15sdp"
+                android:layout_marginTop="@dimen/_50sdp"
+                card_view:srcCompat="@drawable/star" />
+
+            <ImageView
+                android:id="@+id/forkpic"
+                android:layout_width="@dimen/_20sdp"
+                android:layout_height="@dimen/_20sdp"
+                android:layout_marginLeft="@dimen/_80sdp"
+                android:layout_marginTop="@dimen/_50sdp"
+                card_view:srcCompat="@drawable/fork" />
+
+            <TextView
+                android:id="@+id/fork"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/_103sdp"
+                android:layout_marginTop="@dimen/_52sdp"
+                android:fontFamily="casual"
+                android:text="5000" />
+
+            <ImageView
+                android:id="@+id/penpic"
+                android:layout_width="@dimen/_19sdp"
+                android:layout_height="@dimen/_19sdp"
+                android:layout_marginLeft="@dimen/_148sdp"
+                android:layout_marginTop="@dimen/_50sdp"
+                card_view:srcCompat="@drawable/pen" />
+
+            <TextView
+                android:id="@+id/language"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/_173sdp"
+                android:layout_marginTop="@dimen/_52sdp"
+                android:fontFamily="casual"
+                android:text="Java" />
+
+            <TextView
+                android:id="@+id/contributors"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/_7sdp"
+                android:layout_marginTop="@dimen/_85sdp"
+                android:fontFamily="casual"
+                android:text="Contributors :" />
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/contributorpic1"
+                android:layout_width="@dimen/_17sdp"
+                android:layout_height="@dimen/_17sdp"
+                android:layout_marginTop="@dimen/_85sdp"
+                android:layout_marginLeft="@dimen/_80sdp"
+
+                />
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/contributorpic2"
+                android:layout_width="@dimen/_17sdp"
+                android:layout_height="@dimen/_17sdp"
+                android:layout_marginTop="@dimen/_85sdp"
+                android:layout_marginLeft="@dimen/_102sdp"
+
+                />
+            <de.hdodenhof.circleimageview.CircleImageView
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/contributorpic3"
+                android:layout_width="@dimen/_17sdp"
+                android:layout_height="@dimen/_17sdp"
+                android:layout_marginTop="@dimen/_85sdp"
+                android:layout_marginLeft="@dimen/_124sdp"
+
+                />
+            <de.hdodenhof.circleimageview.CircleImageView
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/contributorpic4"
+                android:layout_width="@dimen/_17sdp"
+                android:layout_height="@dimen/_17sdp"
+                android:layout_marginTop="@dimen/_85sdp"
+                android:layout_marginLeft="@dimen/_146sdp"
+
+                />
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/contributorpic5"
+                android:layout_width="@dimen/_17sdp"
+                android:layout_height="@dimen/_17sdp"
+                android:layout_marginTop="@dimen/_85sdp"
+                android:layout_marginLeft="@dimen/_168sdp"
+
+                />
+
+            <ImageView
+                android:id="@+id/bookmarkpic"
+                android:layout_width="@dimen/_45sdp"
+                android:layout_height="@dimen/_45sdp"
+                android:layout_marginLeft="@dimen/_240sdp"
+                card_view:srcCompat="@drawable/bookmark1"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+                android:tag="0"
+                android:layout_marginTop="@dimen/_52sdp"
+                />
+
+            <TextView
+                android:id="@+id/bookmark"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/_242sdp"
+                android:layout_marginTop="@dimen/_100sdp"
+                android:fontFamily="casual"
+                android:text="Bookmark"
+                android:tag="0"
+                android:textSize="@dimen/_8sdp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/_7sdp"
+                android:layout_marginTop="@dimen/_110sdp"
+                android:layout_marginRight="@dimen/_57sdp"
+                android:fontFamily="casual"
+                android:text="this is a repo that does a lot of work and is stupid as hell and it do not go where"
+                android:tag="0"
+                android:textSize="@dimen/_8sdp"
+                android:textStyle="bold" />
+
+
+
+        </RelativeLayout>
+    </androidx.cardview.widget.CardView>
+
+
+
+</LinearLayout>

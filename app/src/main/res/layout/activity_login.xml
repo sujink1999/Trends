@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical" android:layout_width="@dimen/_250sdp"
+    android:layout_height="@dimen/_270sdp"
+    android:layout_gravity="center"
+   >
+
+
+    <RelativeLayout
+        android:orientation="vertical" android:layout_width="@dimen/_250sdp"
+        android:layout_height="@dimen/_220sdp"
+        android:layout_marginTop="@dimen/_50sdp"
+        android:background="@drawable/background_gradient">
+
+    <EditText
+
+        android:id="@+id/username"
+        android:layout_width="@dimen/_210sdp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_70sdp"
+        android:ems="10"
+        android:layout_marginRight="@dimen/_20sdp"
+        android:layout_marginLeft="@dimen/_20sdp"
+        android:inputType="textPersonName"
+        android:text=""
+        android:hint="Username"
+
+
+        />
+
+
+    <EditText
+        android:id="@+id/password"
+        android:layout_width="@dimen/_210sdp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/_20sdp"
+        android:layout_marginRight="@dimen/_20sdp"
+        android:layout_marginTop="@dimen/_120sdp"
+        android:ems="10"
+        android:hint="Password"
+        android:inputType="textPersonName" />
+
+        <Button
+            android:id="@+id/log_in"
+            android:layout_width="@dimen/_210sdp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/_20sdp"
+            android:layout_marginTop="@dimen/_170sdp"
+            android:layout_marginRight="@dimen/_20sdp"
+            android:background="@color/white"
+            android:text="Login/Register"
+            android:textAllCaps="false" />
+
+    </RelativeLayout>
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:layout_width="@dimen/_80sdp"
+        android:layout_height="@dimen/_80sdp"
+        android:layout_marginLeft="@dimen/_85sdp"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:src="@color/white" />
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:layout_width="@dimen/_80sdp"
+        android:layout_height="@dimen/_80sdp"
+        android:layout_marginLeft="@dimen/_85sdp"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:src="@drawable/login" />
+
+
+</RelativeLayout>
+
