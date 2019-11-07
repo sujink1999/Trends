@@ -140,10 +140,7 @@ public class LoginActivity extends AppCompatActivity {
                                 databaseHelper = new DatabaseHelper(getApplicationContext());
                                 Toast.makeText(LoginActivity.this, response.body().getList().toString(), Toast.LENGTH_SHORT).show();
                                 PostResult postResult = response.body();
-                                if (postResult.getList() != null) {
-
-                                    Log.d("id", postResult.getId());
-                                }
+                                
                                 for (int i = 0; i < postResult.getList().size(); i++) {
                                     databaseHelper.insertData(postResult.getList().get(i));
                                     Log.d("tag", postResult.getList().get(i).getAuthor());
