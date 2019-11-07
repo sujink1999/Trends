@@ -25,8 +25,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL("create table bookmarks (id integer primary key autoincrement ,author text,name text,avatar text,url text,description text,language text,languageColor text," +
                 "stars integer,forks integer,currentPeriodStars integer)");
         sqLiteDatabase.execSQL("create table builtby (authorName text, username text,href text,avatar text)");
-        sqLiteDatabase.execSQL("create table userid (id text)");
-        Toast.makeText(context, "table created", Toast.LENGTH_SHORT).show();
+        sqLiteDatabase.execSQL("create table userid (id integer primary key autoincrement, uid text)");
     }
 
     @Override
@@ -37,13 +36,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public void insertUserId(String userId)
     {
         ContentValues contentValues = new ContentValues();
-        contentValues.put("id",userId);
+        contentValues.put("uid",userId);
         sqLiteDatabase.insert("userid",null,contentValues);
     }
 
     public String getUserId()
     {
-        String uid="";
+        String uid="nothing";
         Cursor userid = sqLiteDatabase.rawQuery("select * from userid ", null);
         if(userid.moveToNext())
         {
@@ -77,7 +76,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             sqLiteDatabase.insert("builtby",null,builtby);
 
         }
-        Toast.makeText(context, "Data inserted", Toast.LENGTH_SHORT).show();
+        Toast.makeText(context, "Bookmark added", Toast.LENGTH_SHORT).show();
     }
 
     public Cursor getBookmarks() {
@@ -95,6 +94,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     {
         sqLiteDatabase.execSQL("delete from bookmarks where author ='"+author+"' and "+"name='"+name+"'");
         sqLiteDatabase.execSQL("delete from builtby where authorName='"+author+name+"'");
+        Toast.makeText(context, "Bookmark removed", Toast.LENGTH_SHORT).show();
     }
 
 }

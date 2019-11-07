@@ -16,10 +16,18 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.sujin.trends.LoginActivity;
+import com.sujin.trends.MainActivity;
 import com.sujin.trends.R;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RepositoriesListAdapter extends RecyclerView.Adapter<RepositoriesListAdapter.MyViewHolder>{
 
@@ -28,6 +36,7 @@ public class RepositoriesListAdapter extends RecyclerView.Adapter<RepositoriesLi
     List<Repository> bookmarks;
     List<String> bookmarkNames = new ArrayList<>();
     DatabaseHelper databaseHelper;
+    String userid;
 
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {
@@ -40,11 +49,12 @@ public class RepositoriesListAdapter extends RecyclerView.Adapter<RepositoriesLi
         }
     }
 
-    public RepositoriesListAdapter(List<Repository> names,Context context,List<Repository> bookmarks)
+    public RepositoriesListAdapter(List<Repository> names,Context context,List<Repository> bookmarks,String userid)
     {
         this.repositoryList = names;
         this.mContext=context;
         this.bookmarks=bookmarks;
+        this.userid=userid;
         databaseHelper = new DatabaseHelper(mContext);
         for(int i=0;i<bookmarks.size();i++)
         {
@@ -137,10 +147,50 @@ public class RepositoriesListAdapter extends RecyclerView.Adapter<RepositoriesLi
                         bookmarks.remove(repositoryList.get(position));
                         databaseHelper.deleteData(repositoryList.get(position).getAuthor(),repositoryList.get(position).getName());
 
+                        Retrofit retrofit = new Retrofit.Builder()
+                                .baseUrl(Api.POST_URL)
+                                .addConverterFactory(GsonConverterFactory.create())
+                                .build();
+                        Api service = retrofit.create(Api.class);
+                        Call<PostResult> call = service.sendBookmarkDeletion(new AddBookmark(userid,repositoryList.get(position)));
+                        call.enqueue(new Callback<PostResult>() {
+                            @Override
+                            public void onResponse(Call<PostResult> call, Response<PostResult> response) {
+
+                            }
+
+                            @Override
+                            public void onFailure(Call<PostResult> call, Throwable t) {
+
+                                Toast.makeText(mContext, t.getMessage(), Toast.LENGTH_LONG).show();
+                                Log.d("error", t.getMessage());
+                            }
+                        });
+
 
                     }else if(!bookmarkNames.contains(repositoryList.get(position).getAuthor()+repositoryList.get(position).getName()))
                     {
 
+                        Retrofit retrofit = new Retrofit.Builder()
+                                .baseUrl(Api.POST_URL)
+                                .addConverterFactory(GsonConverterFactory.create())
+                                .build();
+                        Api service = retrofit.create(Api.class);
+                        Call<PostResult> call = service.sendBookmarkUpdation(new AddBookmark(userid,repositoryList.get(position)));
+                        call.enqueue(new Callback<PostResult>() {
+                            @Override
+                            public void onResponse(Call<PostResult> call, Response<PostResult> response) {
+                                if (response.body().getObj() != null) {
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Call<PostResult> call, Throwable t) {
+
+                                Toast.makeText(mContext, t.getMessage(), Toast.LENGTH_LONG).show();
+                                Log.d("error", t.getMessage());
+                            }
+                        });
                         bookmarks.add(repositoryList.get(position));
                         bookmarkNames.add(repositoryList.get(position).getAuthor()+repositoryList.get(position).getName());
                         bookmarkpic.setImageResource(R.drawable.bookmark2);

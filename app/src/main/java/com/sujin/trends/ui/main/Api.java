@@ -14,7 +14,7 @@ import retrofit2.http.Query;
 
 public interface Api {
     String BASE_URL = "https://github-trending-api.now.sh/";
-    String POST_URL = "http://www.mocky.io/v2/";
+    String POST_URL = "https://intern-sujin.herokuapp.com";
 
     @GET("repositories?language=&since=")
     Call<List<Repository>> loadChanges(@Query("since") String since);
@@ -40,13 +40,18 @@ public interface Api {
     @GET("repositories?language=&since=monthly")
     Call<List<Repository>> loadLanguageMonthly(@Query("language") String language);
 
-    @FormUrlEncoded
-    @POST("5dc0ffb7330000f12d1a4d9d")
-    Call<PostResult> sendStatus(@Field("username") String username, @Field("password") String password);
+    @POST("/test/")
+    Call<PostResult> login(@Body UserDetails userDetails);
 
-    @FormUrlEncoded
-    @POST("5dc0ffb7330000f12d1a4d9d")
-    Call<PostResult> sendBookmarkUpdation(@Field("id") String id, @Field("bookmark") Repository bookmark);
+    @POST("/")
+    Call<PostResult> sendStatus(@Body UserDetails userDetails);
+
+    @POST("/bookmark")
+    Call<PostResult> sendBookmarkUpdation(@Body AddBookmark addBookmark);
+
+    @POST("/del")
+    Call<PostResult> sendBookmarkDeletion(@Body AddBookmark addBookmark);
+
 
 
 

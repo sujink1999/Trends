@@ -22,9 +22,11 @@ public class BookmarksFragment extends Fragment {
     private RecyclerView.Adapter repositoriesListAdapter;
     private RecyclerView.LayoutManager layoutManager;
     List<Repository> repositoryList;
+    String userid;
 
-    public BookmarksFragment(List<Repository> repositoryList){
+    public BookmarksFragment(List<Repository> repositoryList,String userid){
         this.repositoryList = repositoryList;
+        this.userid=userid;
     }
 
 
@@ -41,7 +43,7 @@ public class BookmarksFragment extends Fragment {
         repositoriesList.setLayoutManager(layoutManager);
 
         // specify an adapter (see also next example)
-        repositoriesListAdapter = new BookmarksListAdapter(repositoryList,getContext());
+        repositoriesListAdapter = new BookmarksListAdapter(repositoryList,getContext(),userid);
         repositoriesList.setAdapter(repositoriesListAdapter);
 
 

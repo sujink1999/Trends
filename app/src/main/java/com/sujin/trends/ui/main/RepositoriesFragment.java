@@ -27,10 +27,12 @@ public class RepositoriesFragment extends Fragment {
     private RecyclerView.Adapter repositoriesListAdapter;
     private RecyclerView.LayoutManager layoutManager;
     List<Repository> repositoryList,bookmarks;
+    String userid;
 
-    public RepositoriesFragment(List<Repository> repositoryList,List<Repository> bookmarks){
+    public RepositoriesFragment(List<Repository> repositoryList,List<Repository> bookmarks,String userid){
         this.repositoryList = repositoryList;
         this.bookmarks=bookmarks;
+        this.userid =userid;
     }
 
 
@@ -47,7 +49,7 @@ public class RepositoriesFragment extends Fragment {
         repositoriesList.setLayoutManager(layoutManager);
 
         // specify an adapter (see also next example)
-        repositoriesListAdapter = new RepositoriesListAdapter(repositoryList,getContext(),bookmarks);
+        repositoriesListAdapter = new RepositoriesListAdapter(repositoryList,getContext(),bookmarks,userid);
         repositoriesList.setAdapter(repositoriesListAdapter);
 
 

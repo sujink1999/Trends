@@ -1,11 +1,15 @@
 package com.sujin.trends.ui.main;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Repository {
+public class Repository implements Serializable {
     @SerializedName("author")
     private String author;
 
@@ -143,6 +147,50 @@ public class Repository {
     public List<User> getBuiltBy() {
         return builtBy;
     }
+
+    /*@Override
+    public int describeContents() {
+        return 0;
+    }*/
+
+    /*public SharedBooking(Parcel in) {
+        author=in.readString();
+        avatar=in.readString();
+        name=in.readString();
+        url=in.readString();
+        author=in.readString();
+        author=in.readString();
+        author=in.readString();
+        author=in.readInt();
+        author=in.readInt();
+        author=in.readInt();
+    }*/
+
+   /* @Override
+    public void writeToParcel(Parcel parcel, int i) {
+
+        parcel.writeString();
+        parcel.writeString();
+        parcel.writeString();
+        parcel.writeString();
+        parcel.writeString();
+        parcel.writeString();
+        parcel.writeInt();
+        parcel.writeInt();
+        parcel.writeInt();
+
+        public static final Parcelable.Creator<Repository> CREATOR = new Parcelable.Creator<Repository>()
+        {
+            public Repository createFromParcel(Parcel in)
+            {
+                return new Repository(in);
+            }
+            public Repository[] newArray(int size)
+            {
+                return new Repository[size];
+            }
+        };
+    }*/
 }
 
 //"author":"notepad-plus-plus","name":"notepad-plus-plus","avatar":"https://github.com/notepad-plus-plus.png",

@@ -1,5 +1,6 @@
 package com.sujin.trends;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
@@ -45,7 +46,7 @@ public class MainActivity extends AppCompatActivity implements FilterBottomSheet
 
     private SectionsPageAdapter mSectionsPageAdapter;
     private ViewPager mViewPager;
-    String user_id;
+    String user_id,uid;
     TabLayout tabLayout;
     List<Repository> dailyRepositories,weeklyRepositories,monthlyRepositories,dailyLanguage,monthlyLanguage,weeklyLanguage,bookmarkrepositories;
     List<Repository> emptyRepositories;
@@ -55,6 +56,7 @@ public class MainActivity extends AppCompatActivity implements FilterBottomSheet
     List<Language> languages;
     ShimmerFrameLayout mShimmerViewContainer;
     int noc=0,nolc=0;
+    Api service;
     DatabaseHelper databaseHelper;
 
     @Override
@@ -62,67 +64,40 @@ public class MainActivity extends AppCompatActivity implements FilterBottomSheet
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        databaseHelper = new DatabaseHelper(this);
-        user_id = databaseHelper.getUserId();
-        Cursor bookmarks = databaseHelper.getBookmarks();
-        bookmarkrepositories = new ArrayList<>();
-        if(bookmarks.getCount()!=0)
-        {
-            while (bookmarks.moveToNext())
-            {
-                Repository newRepository = new Repository(bookmarks.getString(1),
-                        bookmarks.getString(2),
-                        bookmarks.getString(3),
-                        bookmarks.getString(4),
-                        bookmarks.getString(5),
-                        bookmarks.getString(6),
-                        bookmarks.getString(7),
-                        bookmarks.getInt(8),
-                        bookmarks.getInt(9),
-                        bookmarks.getInt(10));
-                Cursor contributors = databaseHelper.getBuiltBy(bookmarks.getString(1)+bookmarks.getString(2));
-                if(contributors.getCount()!=0)
-                {
-                    while(contributors.moveToNext())
-                    {
-                        newRepository.setBuiltBy(new ArrayList<User>());
-                        newRepository.getBuiltBy().add(new User(contributors.getString(1),contributors.getString(2),
-                                contributors.getString(3)));
-                    }
+
+        databaseHelper = new DatabaseHelper(getApplicationContext());
+
+        String type = getIntent().getStringExtra("type");
+        if(type.equals("login")) {
+            Bundle args = getIntent().getBundleExtra("BUNDLE");
+            uid = args.getString("uid");
+            ArrayList<Repository> object = (ArrayList<Repository>) args.getSerializable("ARRAYLIST");
+            if (object != null) {
+                for (int i = 0; i < object.size(); i++) {
+                    databaseHelper.insertData(object.get(i));
+                    Log.d("tag", object.get(i).getAuthor());
                 }
-                bookmarkrepositories.add(newRepository);
             }
+            databaseHelper.insertUserId(uid);
+        }else if(type.equals("register"))
+        {
+            uid = getIntent().getStringExtra("uid");
+            databaseHelper.insertUserId(uid);
         }
 
+        initialize();
 
-        mSectionsPageAdapter = new SectionsPageAdapter(getSupportFragmentManager());
-        mViewPager = (ViewPager) findViewById(R.id.view_pager);
-        tabLayout = (TabLayout) findViewById(R.id.tabs);
-        filterBottomSheet = new FilterBottomSheet(lang);
-        mShimmerViewContainer = findViewById(R.id.shimmer_view_container);
-        mShimmerViewContainer.startShimmerAnimation();
+        service = getService();
 
-
-        getDailyData();
-        getMonthlyData();
-        getWeeklyData();
-        getDailyDevelopers();
-        getMonthlyDevelopers();
-        getWeeklyDevelopers();
-        getLanguages();
+        getRepositories(service);
+        getDevelopers(service);
+        getLanguages(service);
 
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
-                /*if(item.getItemId()==R.id.developers)
-                {
-                    Toast.makeText(MainActivity.this, "Developers", Toast.LENGTH_SHORT).show();
-                    setupViewPager(mViewPager,"developers");
-                    tabLayout.setupWithViewPager(mViewPager);
-
-                }else */
                 if(item.getItemId()==R.id.bookmarks)
                 {
                     Toast.makeText(MainActivity.this, "Bookmarks", Toast.LENGTH_SHORT).show();
@@ -135,73 +110,65 @@ public class MainActivity extends AppCompatActivity implements FilterBottomSheet
                 }
 
                         return true;
-
                 }
 
             });
 
     }
 
-    private void setupViewPager(ViewPager viewPager,String nav)
-    {
-        if(nav.equals("repositories")) {
-
-            mSectionsPageAdapter.removeFragments();
-            mSectionsPageAdapter.addFragment(new RepositoriesFragment(dailyRepositories,bookmarkrepositories), "Daily");
-            mSectionsPageAdapter.addFragment(new RepositoriesFragment(weeklyRepositories,bookmarkrepositories), "Weekly");
-            mSectionsPageAdapter.addFragment(new RepositoriesFragment(monthlyRepositories,bookmarkrepositories), "Monthly");
-            viewPager.setAdapter(mSectionsPageAdapter);
-
-            //mSectionsPageAdapter.notifyDataSetChanged();
-        }else if(nav.equals("developers"))
-        {
-            mSectionsPageAdapter.removeFragments();
-            mSectionsPageAdapter.addFragment(new DevelopersFragment(dailyDevelopers), "Daily");
-            mSectionsPageAdapter.addFragment(new DevelopersFragment(weeklyDevelopers), "Weekly");
-            mSectionsPageAdapter.addFragment(new DevelopersFragment(monthlyDevelopers), "Monthly");
-
-            viewPager.setAdapter(mSectionsPageAdapter);
-
-        }else if(nav.equals("bookmarks"))
-        {
-            mSectionsPageAdapter.removeFragments();
-            mSectionsPageAdapter.addFragment(new BookmarksFragment(bookmarkrepositories),"Bookmarks");
-            viewPager.setAdapter(mSectionsPageAdapter);
-        }else if(nav.equals("language"))
-        {
-            mSectionsPageAdapter.removeFragments();
-            mSectionsPageAdapter.addFragment(new RepositoriesFragment(dailyLanguage,bookmarkrepositories), "Daily");
-            mSectionsPageAdapter.addFragment(new RepositoriesFragment(weeklyLanguage,bookmarkrepositories), "Weekly");
-            mSectionsPageAdapter.addFragment(new RepositoriesFragment(monthlyLanguage,bookmarkrepositories), "Monthly");
-            viewPager.setAdapter(mSectionsPageAdapter);
-        }else if(nav.equals("clear"))
-        {
-            mSectionsPageAdapter.removeFragments();
-            viewPager.setAdapter(mSectionsPageAdapter);
-        }
-    }
-
-    public void getDailyDevelopers()
+    public Api getService()
     {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(Api.BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         Api service = retrofit.create(Api.class);
-        Call<List<Developer>> repos = service.loadDevelopers("daily");
+        return service;
+    }
 
-        repos.enqueue(new Callback<List<Developer>>() {
+    private void setupViewPager(ViewPager viewPager,String nav)
+    {
+        mSectionsPageAdapter.removeFragments();
+
+        if(nav.equals("repositories")) {
+
+            mSectionsPageAdapter.addFragment(new RepositoriesFragment(dailyRepositories,bookmarkrepositories,user_id), "Daily");
+            mSectionsPageAdapter.addFragment(new RepositoriesFragment(weeklyRepositories,bookmarkrepositories,user_id), "Weekly");
+            mSectionsPageAdapter.addFragment(new RepositoriesFragment(monthlyRepositories,bookmarkrepositories,user_id), "Monthly");
+
+        }else if(nav.equals("developers"))
+        {
+            mSectionsPageAdapter.addFragment(new DevelopersFragment(dailyDevelopers), "Daily");
+            mSectionsPageAdapter.addFragment(new DevelopersFragment(weeklyDevelopers), "Weekly");
+            mSectionsPageAdapter.addFragment(new DevelopersFragment(monthlyDevelopers), "Monthly");
+
+
+        }else if(nav.equals("bookmarks"))
+        {
+            mSectionsPageAdapter.addFragment(new BookmarksFragment(bookmarkrepositories,user_id),"Bookmarks");
+
+        }else if(nav.equals("language"))
+        {
+            mSectionsPageAdapter.addFragment(new RepositoriesFragment(dailyLanguage,bookmarkrepositories,user_id), "Daily");
+            mSectionsPageAdapter.addFragment(new RepositoriesFragment(weeklyLanguage,bookmarkrepositories,user_id), "Weekly");
+            mSectionsPageAdapter.addFragment(new RepositoriesFragment(monthlyLanguage,bookmarkrepositories,user_id), "Monthly");
+
+        }
+        viewPager.setAdapter(mSectionsPageAdapter);
+    }
+
+    public void getDevelopers(Api service)
+    {
+
+        Call<List<Developer>> daily = service.loadDevelopers("daily");
+        daily.enqueue(new Callback<List<Developer>>() {
             @Override
             public void onResponse(Call<List<Developer>> call, Response<List<Developer>> response) {
                 List<Developer> d=response.body();
                 if(d!=null)
                 {
                     dailyDevelopers = d;
-
                 }
-
-
-
             }
 
             @Override
@@ -209,17 +176,45 @@ public class MainActivity extends AppCompatActivity implements FilterBottomSheet
                 Log.d("Repository",t.getMessage());
             }
         });
+
+        Call<List<Developer>> weekly = service.loadWeekly();
+        weekly.enqueue(new Callback<List<Developer>>() {
+            @Override
+            public void onResponse(Call<List<Developer>> call, Response<List<Developer>> response) {
+                List<Developer> week=response.body();
+                if(week!=null)
+                {
+                    weeklyDevelopers = week;
+                }
+            }
+            @Override
+            public void onFailure(Call<List<Developer>> call, Throwable t) {
+                Log.d("Repository",t.getMessage());
+            }
+        });
+
+        Call<List<Developer>> monthly = service.loadMonthly();
+        monthly.enqueue(new Callback<List<Developer>>() {
+            @Override
+            public void onResponse(Call<List<Developer>> call, Response<List<Developer>> response) {
+                List<Developer> d=response.body();
+                if(d!=null)
+                {
+                    monthlyDevelopers = d;
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Developer>> call, Throwable t) {
+                Log.d("Repository",t.getMessage());
+            }
+        });
+
     }
 
-    public void getLanguages()
+    public void getLanguages(Api service)
     {
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(Api.BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-        Api service = retrofit.create(Api.class);
         Call<List<Language>> repos = service.loadLanguages();
-
         repos.enqueue(new Callback<List<Language>>() {
             @Override
             public void onResponse(Call<List<Language>> call, Response<List<Language>> response) {
@@ -241,70 +236,12 @@ public class MainActivity extends AppCompatActivity implements FilterBottomSheet
         });
     }
 
-    public void getWeeklyDevelopers()
+
+    public void getRepositories(Api service)
     {
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(Api.BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-        Api service = retrofit.create(Api.class);
-        Call<List<Developer>> dev = service.loadWeekly();
 
-        dev.enqueue(new Callback<List<Developer>>() {
-            @Override
-            public void onResponse(Call<List<Developer>> call, Response<List<Developer>> response) {
-                List<Developer> week=response.body();
-                if(week!=null)
-                {
-                    weeklyDevelopers = week;
-
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<Developer>> call, Throwable t) {
-                Log.d("Repository",t.getMessage());
-            }
-        });
-    }
-
-    public void getMonthlyDevelopers()
-    {
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(Api.BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-        Api service = retrofit.create(Api.class);
-        Call<List<Developer>> repos = service.loadMonthly();
-
-        repos.enqueue(new Callback<List<Developer>>() {
-            @Override
-            public void onResponse(Call<List<Developer>> call, Response<List<Developer>> response) {
-                List<Developer> d=response.body();
-                if(d!=null)
-                {
-                    Log.d("Developer",d.get(0).getUsername());
-                    monthlyDevelopers = d;
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<Developer>> call, Throwable t) {
-                Log.d("Repository",t.getMessage());
-            }
-        });
-    }
-
-    public void getDailyData()
-    {
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(Api.BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-        Api service = retrofit.create(Api.class);
-        Call<List<Repository>> repos = service.loadChanges("daily");
-
-        repos.enqueue(new Callback<List<Repository>>() {
+        Call<List<Repository>> daily = service.loadChanges("daily");
+        daily.enqueue(new Callback<List<Repository>>() {
             @Override
             public void onResponse(Call<List<Repository>> call, Response<List<Repository>> response) {
                 List<Repository> d=response.body();
@@ -321,31 +258,17 @@ public class MainActivity extends AppCompatActivity implements FilterBottomSheet
 
                         mShimmerViewContainer.stopShimmerAnimation();
                         mShimmerViewContainer.setVisibility(View.INVISIBLE);
-
                     }
                 }
-
-
-
             }
-
             @Override
             public void onFailure(Call<List<Repository>> call, Throwable t) {
                 Log.d("Repository",t.getMessage());
             }
         });
-    }
 
-    public void getWeeklyData()
-    {
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(Api.BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-        Api service = retrofit.create(Api.class);
-        Call<List<Repository>> repos = service.loadChanges("weekly");
-
-        repos.enqueue(new Callback<List<Repository>>() {
+        Call<List<Repository>> weekly = service.loadChanges("weekly");
+        weekly.enqueue(new Callback<List<Repository>>() {
             @Override
             public void onResponse(Call<List<Repository>> call, Response<List<Repository>> response) {
                 List<Repository> d=response.body();
@@ -363,9 +286,6 @@ public class MainActivity extends AppCompatActivity implements FilterBottomSheet
                         mShimmerViewContainer.setVisibility(View.INVISIBLE);
                     }
                 }
-
-
-
             }
 
             @Override
@@ -373,18 +293,9 @@ public class MainActivity extends AppCompatActivity implements FilterBottomSheet
                 Log.d("Repository",t.getMessage());
             }
         });
-    }
 
-    public void getMonthlyData()
-    {
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(Api.BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-        Api service = retrofit.create(Api.class);
-        Call<List<Repository>> repos = service.loadChanges("monthly");
-
-        repos.enqueue(new Callback<List<Repository>>() {
+        Call<List<Repository>> monthly = service.loadChanges("monthly");
+        monthly.enqueue(new Callback<List<Repository>>() {
             @Override
             public void onResponse(Call<List<Repository>> call, Response<List<Repository>> response) {
                 List<Repository> d=response.body();
@@ -404,11 +315,7 @@ public class MainActivity extends AppCompatActivity implements FilterBottomSheet
                         mShimmerViewContainer.setVisibility(View.INVISIBLE);
                     }
                 }
-
-
-
             }
-
             @Override
             public void onFailure(Call<List<Repository>> call, Throwable t) {
                 Log.d("Repository",t.getMessage());
@@ -416,16 +323,18 @@ public class MainActivity extends AppCompatActivity implements FilterBottomSheet
         });
     }
 
+
     public void getLanguageSpecificData(String language)
     {
         {
+
             Retrofit retrofit = new Retrofit.Builder()
                     .baseUrl(Api.BASE_URL)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
             Api service = retrofit.create(Api.class);
-            Call<List<Repository>> repos = service.loadLanguageDaily(language);
 
+            Call<List<Repository>> repos = service.loadLanguageDaily(language);
             repos.enqueue(new Callback<List<Repository>>() {
                 @Override
                 public void onResponse(Call<List<Repository>> call, Response<List<Repository>> response) {
@@ -454,7 +363,6 @@ public class MainActivity extends AppCompatActivity implements FilterBottomSheet
             });
 
             Call<List<Repository>> repos2 = service.loadLanguageMonthly(language);
-
             repos2.enqueue(new Callback<List<Repository>>() {
                 @Override
                 public void onResponse(Call<List<Repository>> call, Response<List<Repository>> response) {
@@ -483,7 +391,6 @@ public class MainActivity extends AppCompatActivity implements FilterBottomSheet
             });
 
             Call<List<Repository>> repos3 = service.loadLanguageWeekly(language);
-
             repos3.enqueue(new Callback<List<Repository>>() {
                 @Override
                 public void onResponse(Call<List<Repository>> call, Response<List<Repository>> response) {
@@ -535,6 +442,10 @@ public class MainActivity extends AppCompatActivity implements FilterBottomSheet
                filterBottomSheet.show(getSupportFragmentManager(),
                        "filter");
                break;
+           case R.id.log_out:
+               this.deleteDatabase("name.db");
+               Intent intent = new Intent(this,LoginActivity.class);
+               startActivity(intent);
        }
         return false;
     }
@@ -544,13 +455,52 @@ public class MainActivity extends AppCompatActivity implements FilterBottomSheet
         filterBottomSheet.dismiss();
         getLanguageSpecificData(languages.get(position).getUrlParam());
         setupViewPager(mViewPager, "clear");
-
         tabLayout.setupWithViewPager(mViewPager);
-
         mShimmerViewContainer.setVisibility(View.VISIBLE);
         mShimmerViewContainer.startShimmerAnimation();
 
+    }
 
+    public void initialize()
+    {
+        databaseHelper = new DatabaseHelper(this);
+        databaseHelper.insertUserId("5ilJboM95JkP4vK9bAKj");
+        user_id = databaseHelper.getUserId();
+        Cursor bookmarks = databaseHelper.getBookmarks();
+        bookmarkrepositories = new ArrayList<>();
+        if(bookmarks.getCount()!=0)
+        {
+            while (bookmarks.moveToNext())
+            {
+                Repository newRepository = new Repository(bookmarks.getString(1),
+                        bookmarks.getString(2),
+                        bookmarks.getString(3),
+                        bookmarks.getString(4),
+                        bookmarks.getString(5),
+                        bookmarks.getString(6),
+                        bookmarks.getString(7),
+                        bookmarks.getInt(8),
+                        bookmarks.getInt(9),
+                        bookmarks.getInt(10));
+                Cursor contributors = databaseHelper.getBuiltBy(bookmarks.getString(1)+bookmarks.getString(2));
+                if(contributors.getCount()!=0)
+                {
+                    while(contributors.moveToNext())
+                    {
+                        newRepository.setBuiltBy(new ArrayList<User>());
+                        newRepository.getBuiltBy().add(new User(contributors.getString(1),contributors.getString(2),
+                                contributors.getString(3)));
+                    }
+                }
+                bookmarkrepositories.add(newRepository);
+            }
+        }
+        mSectionsPageAdapter = new SectionsPageAdapter(getSupportFragmentManager());
+        mViewPager = (ViewPager) findViewById(R.id.view_pager);
+        tabLayout = (TabLayout) findViewById(R.id.tabs);
+        filterBottomSheet = new FilterBottomSheet(lang);
+        mShimmerViewContainer = findViewById(R.id.shimmer_view_container);
+        mShimmerViewContainer.startShimmerAnimation();
     }
 
 }

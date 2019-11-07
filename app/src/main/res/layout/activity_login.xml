@@ -39,17 +39,28 @@
         android:layout_marginTop="@dimen/_120sdp"
         android:ems="10"
         android:hint="Password"
-        android:inputType="textPersonName" />
+        android:inputType="textPassword" />
 
         <Button
             android:id="@+id/log_in"
-            android:layout_width="@dimen/_210sdp"
+            android:layout_width="@dimen/_100sdp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/_20sdp"
             android:layout_marginTop="@dimen/_170sdp"
             android:layout_marginRight="@dimen/_20sdp"
-            android:background="@color/white"
-            android:text="Login/Register"
+            android:background="@color/blue"
+            android:text="Login"
+            android:textAllCaps="false" />
+
+        <Button
+            android:id="@+id/register"
+            android:layout_width="@dimen/_100sdp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/_130sdp"
+            android:layout_marginTop="@dimen/_170sdp"
+            android:layout_marginRight="@dimen/_20sdp"
+            android:background="@color/blue"
+            android:text="Register"
             android:textAllCaps="false" />
 
     </RelativeLayout>
