@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -20,6 +21,7 @@ import com.sujin.trends.ui.main.UserDetails;
 import java.io.File;
 import java.io.Serializable;
 import java.util.List;
+import java.util.Timer;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -69,6 +71,7 @@ public class LoginActivity extends AppCompatActivity {
                             .build();
                     Api service = retrofit.create(Api.class);
                     Call<PostResult> call = service.sendStatus(new UserDetails(username.getText().toString(), password.getText().toString()));
+                    Toast.makeText(LoginActivity.this, "Working on it...", Toast.LENGTH_SHORT).show();
                     call.enqueue(new Callback<PostResult>() {
                         @Override
                         public void onResponse(Call<PostResult> call, Response<PostResult> response) {
@@ -127,7 +130,8 @@ public class LoginActivity extends AppCompatActivity {
                             .addConverterFactory(GsonConverterFactory.create())
                             .build();
                     Api service = retrofit.create(Api.class);
-                    Call<PostResult> call = service.login(new UserDetails("malabar", "1234"));
+                    Call<PostResult> call = service.login(new UserDetails(username.getText().toString(), password.getText().toString()));
+                    Toast.makeText(LoginActivity.this, "Working on it...", Toast.LENGTH_SHORT).show();
                     call.enqueue(new Callback<PostResult>() {
                         @Override
                         public void onResponse(Call<PostResult> call, Response<PostResult> response) {
@@ -166,7 +170,7 @@ public class LoginActivity extends AppCompatActivity {
                         @Override
                         public void onFailure(Call<PostResult> call, Throwable t) {
 
-                            Toast.makeText(LoginActivity.this, t.getMessage(), Toast.LENGTH_LONG).show();
+                            Toast.makeText(LoginActivity.this, "Invalid Credentials", Toast.LENGTH_LONG).show();
                             Log.d("error", t.getMessage());
                         }
                     });
@@ -174,46 +178,7 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        /*final RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
-        queue.start();
-        Button button = findViewById(R.id.log_in);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
 
-                final HashMap<String, String> params = new HashMap<String, String>();
-                params.put("username", "sujin"); // the entered data as the body.
-                params.put("name", "name");
-                params.put("password", "password");
-
-                JsonObjectRequest jsObjRequest = new
-                        JsonObjectRequest(Request.Method.POST,
-                        "http://192.168.0.102:5500/",
-                        new JSONObject(params),
-                        new Response.Listener<JSONObject>() {
-                            @Override
-                            public void onResponse(JSONObject response) {
-                                try {
-
-
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        }
-
-
-
-                        , new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        //DisplayText.setText("That didn't work!");
-                        error.printStackTrace();
-                    }
-                });
-                queue.add(jsObjRequest);
-            }
-        });*/
             }
 
 
