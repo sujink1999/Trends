@@ -89,6 +89,7 @@ public class LoginActivity extends AppCompatActivity {
                                     Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                                     intent.putExtra("type","register");
                                     intent.putExtra("uid",postResult.getId());
+                                    Log.d("id",postResult.getId());
                                     startActivity(intent);
                                     finish();
 
@@ -138,17 +139,18 @@ public class LoginActivity extends AppCompatActivity {
 
                             if (response.body().getObj().equals("true")) {
                                 databaseHelper = new DatabaseHelper(getApplicationContext());
-                                Toast.makeText(LoginActivity.this, response.body().getList().toString(), Toast.LENGTH_SHORT).show();
+                                //Toast.makeText(LoginActivity.this, response.body().getList().toString(), Toast.LENGTH_SHORT).show();
                                 PostResult postResult = response.body();
 
                                 for (int i = 0; i < postResult.getList().size(); i++) {
-                                    databaseHelper.insertData(postResult.getList().get(i));
+                                    //databaseHelper.insertData(postResult.getList().get(i));
                                     Log.d("tag", postResult.getList().get(i).getAuthor());
                                 }
 
                                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                                 Bundle args = new Bundle();
                                 intent.putExtra("type","login");
+                                Log.d("id",postResult.getId());
                                 args.putString("uid", postResult.getId());
                                 args.putSerializable("ARRAYLIST", (Serializable) postResult.getList());
                                 intent.putExtra("BUNDLE", args);

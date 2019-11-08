@@ -175,11 +175,13 @@ public class RepositoriesListAdapter extends RecyclerView.Adapter<RepositoriesLi
                                 .addConverterFactory(GsonConverterFactory.create())
                                 .build();
                         Api service = retrofit.create(Api.class);
+                        //Log.d("id ",userid);
                         Call<PostResult> call = service.sendBookmarkUpdation(new AddBookmark(userid,repositoryList.get(position)));
                         call.enqueue(new Callback<PostResult>() {
                             @Override
                             public void onResponse(Call<PostResult> call, Response<PostResult> response) {
                                 if (response.body().getObj() != null) {
+                                    Log.d("res",response.body().getObj() );
                                 }
                             }
 

@@ -71,6 +71,8 @@ public class MainActivity extends AppCompatActivity implements FilterBottomSheet
         if(type.equals("login")) {
             Bundle args = getIntent().getBundleExtra("BUNDLE");
             uid = args.getString("uid");
+            Log.d(" main activity id",uid);
+            databaseHelper.insertUserId(uid);
             ArrayList<Repository> object = (ArrayList<Repository>) args.getSerializable("ARRAYLIST");
             if (object != null) {
                 for (int i = 0; i < object.size(); i++) {
@@ -78,10 +80,10 @@ public class MainActivity extends AppCompatActivity implements FilterBottomSheet
                     Log.d("tag", object.get(i).getAuthor());
                 }
             }
-            databaseHelper.insertUserId(uid);
         }else if(type.equals("register"))
         {
             uid = getIntent().getStringExtra("uid");
+            Log.d(" main activity register id",uid);
             databaseHelper.insertUserId(uid);
         }
 
